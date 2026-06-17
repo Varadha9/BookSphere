@@ -29,7 +29,14 @@ export default function BookDetailPage({ setPage }) {
   const [selectedFormat, setSelectedFormat] = useState(0);
   const [copied, setCopied]                 = useState(false);
 
-  if (!book) { setPage("Catalog"); return null; }
+  if (!book) {
+    return (
+      <div className="page">
+        <button className="btn-back" onClick={() => setPage("Catalog")}>← Back to Catalog</button>
+        <p className="empty">Book not found. Please go back and select a book.</p>
+      </div>
+    );
+  }
 
   const wishlisted = state.wishlist.has(book.id);
   const inCart     = state.cart.find(i => i.product.id === book.id);

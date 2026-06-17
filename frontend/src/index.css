@@ -1906,3 +1906,401 @@ select { width: auto; min-height: 42px; padding: 0 38px 0 12px; color: white; }
   .footer-bottom { flex-direction: column; text-align: center; }
   .shelf-row { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NEW LOGIN PAGE
+═══════════════════════════════════════════════════════════════════ */
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Left brand panel */
+.login-brand {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 40px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,106,168,0.35), transparent 22rem),
+    radial-gradient(circle at 80% 80%, rgba(57,183,255,0.28), transparent 20rem),
+    linear-gradient(145deg, #140e2a 0%, #0c1a30 100%);
+}
+.login-brand::before {
+  content: "";
+  position: absolute;
+  width: 600px; height: 600px;
+  right: -200px; top: -180px;
+  border-radius: 50%;
+  background: conic-gradient(from 120deg, rgba(255,106,168,0.5), rgba(143,124,255,0.4), rgba(57,183,255,0.5), rgba(78,230,180,0.4), rgba(255,106,168,0.5));
+  filter: blur(4px);
+  animation: rotateGlow 22s linear infinite;
+  pointer-events: none;
+}
+.login-brand-content { position: relative; z-index: 1; max-width: 440px; width: 100%; }
+
+.login-logo-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.login-brand-name { font-size: 1.4rem; font-weight: 900; color: white; }
+
+.login-brand-headline {
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+  line-height: 1.1;
+  color: white;
+  margin-bottom: 14px;
+}
+.login-brand-sub {
+  color: rgba(248,251,255,0.68);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.login-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.login-feature-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  color: var(--soft);
+  font-size: 0.82rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+}
+.login-feature-chip span:first-child { font-size: 1rem; }
+
+/* floating book decorations */
+.login-brand-books { position: relative; height: 100px; margin-top: 8px; }
+.lb-book {
+  position: absolute;
+  font-size: 3.2rem;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+}
+.lb-book-1 { left: 0;   bottom: 0; animation: floatBook 5s ease-in-out infinite; }
+.lb-book-2 { left: 80px; bottom: 18px; animation: floatBook 5s ease-in-out infinite 1.5s; }
+.lb-book-3 { left: 160px; bottom: 4px; animation: floatBook 5s ease-in-out infinite 3s; }
+
+/* Right form panel */
+.login-form-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: rgba(5,8,18,0.55);
+  backdrop-filter: blur(28px);
+}
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  display: grid;
+  gap: 18px;
+}
+
+/* Toggle */
+.login-toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 5px;
+  border-radius: 16px;
+  background: rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+.login-toggle button {
+  position: relative;
+  z-index: 1;
+  padding: 12px;
+  border-radius: 12px;
+  color: var(--muted);
+  background: transparent;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: color 220ms;
+}
+.login-toggle button.active { color: white; }
+.toggle-slider {
+  position: absolute;
+  top: 5px; bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(143,124,255,0.9), rgba(57,183,255,0.84));
+  transition: transform 220ms cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+
+.login-card-header h3 { font-size: 1.5rem; color: white; }
+.login-card-header p  { color: var(--muted); font-size: 0.86rem; margin-top: 4px; }
+
+/* Form fields */
+.lf-field { display: grid; gap: 7px; }
+.lf-field label { color: var(--soft); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; }
+.lf-label-row { display: flex; align-items: center; justify-content: space-between; }
+.lf-forgot { color: var(--violet); background: transparent; font-size: 0.76rem; font-weight: 800; cursor: pointer; padding: 0; }
+.lf-forgot:hover { color: var(--blue); }
+
+.lf-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.lf-icon {
+  position: absolute;
+  left: 13px;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+}
+.lf-input-wrap input {
+  width: 100%;
+  padding: 13px 44px 13px 40px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(8,12,24,0.52);
+  color: white;
+  outline: none;
+  font-size: 0.92rem;
+  transition: 180ms ease;
+}
+.lf-input-wrap input:focus {
+  border-color: rgba(78,230,180,0.7);
+  box-shadow: 0 0 0 4px rgba(78,230,180,0.1);
+}
+.lf-field.lf-error .lf-input-wrap input {
+  border-color: rgba(255,122,145,0.65);
+}
+.lf-show-pass {
+  position: absolute;
+  right: 10px;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.lf-err-msg { color: var(--red); font-size: 0.74rem; margin-top: -2px; }
+
+.lf-strength { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.lf-strength-bar { display: flex; gap: 4px; flex: 1; }
+.lf-seg { flex: 1; height: 4px; border-radius: 999px; background: rgba(255,255,255,0.12); transition: background 240ms; }
+
+.lf-premium-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--amber);
+  font-size: 0.84rem;
+  cursor: pointer;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,209,102,0.3);
+  border-radius: 12px;
+  background: rgba(255,209,102,0.06);
+}
+.lf-premium-check input { accent-color: var(--amber); }
+
+.lf-status {
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-size: 0.84rem;
+}
+.lf-success { background: rgba(78,230,180,0.1); border: 1px solid rgba(78,230,180,0.35); color: #c8fff0; }
+.lf-error-msg { background: rgba(255,122,145,0.1); border: 1px solid rgba(255,122,145,0.35); color: #ffd6de; }
+
+.lf-submit { width: 100%; justify-content: center; min-height: 50px; font-size: 0.95rem; }
+
+.lf-switch { text-align: center; color: var(--muted); font-size: 0.84rem; }
+.lf-switch span { color: var(--mint); font-weight: 800; cursor: pointer; }
+.lf-switch span:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — COMPREHENSIVE
+═══════════════════════════════════════════════════════════════════ */
+
+/* Tablet: ≤ 1024px */
+@media (max-width: 1024px) {
+  .login-page { grid-template-columns: 1fr; }
+  .login-brand { display: none; }
+  .login-form-panel { min-height: 100vh; padding: 32px 20px; background: transparent; }
+  .login-card { max-width: 480px; }
+
+  .book-detail-hero { grid-template-columns: 260px minmax(0,1fr); }
+  .book-meta-panel { grid-column: 1 / -1; }
+
+  .profile-stats { grid-template-columns: repeat(3,1fr); }
+  .premium-plans-grid { max-width: 100%; }
+}
+
+/* Mobile: ≤ 768px */
+@media (max-width: 768px) {
+  /* Navbar collapses */
+  .navbar {
+    padding: 8px 10px;
+    border-radius: 18px;
+    gap: 8px;
+    top: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-links {
+    order: 3;
+    flex-basis: 100%;
+    gap: 4px;
+    padding-bottom: 4px;
+  }
+  .nav-links button {
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 0.78rem;
+    gap: 5px;
+  }
+  .nav-links button span:first-child { font-size: 0.9rem; }
+  .nav-user { margin-left: auto; gap: 6px; }
+  .btn-premium-nav { display: none; }
+  .nav-logout { padding: 8px 11px; font-size: 0.78rem; }
+  .user-pill span:not(.avatar) { display: none; }
+
+  /* App body needs padding for wrapped navbar */
+  .app-body { padding-top: 12px; }
+
+  /* Catalog */
+  .catalog-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+  .hero-visual { min-height: 220px; }
+  .floating-book { min-height: 200px; width: min(200px,65%); }
+  .catalog-hero h1 { font-size: clamp(2rem, 8vw, 3.5rem); }
+  .hero-search { flex-wrap: wrap; }
+  .hero-search input { width: 100%; }
+  .hero-search button { flex: 1; }
+
+  .stat-strip { grid-template-columns: repeat(2,1fr); }
+  .catalog-layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: static;
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .sort-bar { gap: 4px; }
+  .sort-btn { padding: 6px 9px; font-size: 0.72rem; }
+  .toolbar-right { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .catalog-toolbar { flex-direction: column; align-items: flex-start; }
+
+  .shelf-row { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .product-grid { grid-template-columns: repeat(2,1fr); gap: 12px; }
+
+  /* Book detail */
+  .book-detail-hero {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    border-radius: 22px;
+  }
+  .book-detail-cover { aspect-ratio: 4/3; max-height: 260px; }
+  .book-detail-title { font-size: 1.6rem; }
+  .book-detail-actions { flex-direction: column; }
+  .book-detail-actions button { width: 100%; justify-content: center; }
+  .book-meta-panel { grid-column: 1; }
+
+  .book-detail-recs-grid { grid-template-columns: 1fr; }
+  .rec-mini-card { gap: 10px; }
+
+  /* Cart */
+  .cart-layout { grid-template-columns: 1fr; }
+  .cart-summary-col { position: static; }
+  .cart-item-row { flex-wrap: wrap; }
+  .cart-item-thumb { width: 72px; height: 92px; }
+  .cart-item-price { flex-basis: 100%; text-align: left; }
+
+  /* Orders */
+  .queue-info { flex-direction: column; align-items: flex-start; }
+
+  /* Profile */
+  .profile-stats { grid-template-columns: repeat(2,1fr); }
+  .profile-header { flex-direction: column; text-align: center; align-items: center; }
+  .profile-tabs { flex-wrap: wrap; width: 100%; }
+  .profile-tabs button { flex: 1; min-width: 80px; text-align: center; }
+
+  /* Delivery */
+  .delivery-controls { flex-direction: column; align-items: stretch; }
+  .delivery-controls label { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .delivery-controls select { width: 100%; }
+  .delivery-controls .btn-primary { width: 100%; }
+
+  /* Rec controls */
+  .rec-controls { flex-direction: column; align-items: stretch; }
+  .rec-controls label { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .rec-controls select { width: 100%; }
+
+  /* Cart table mobile */
+  .cart-table, .cart-table thead, .cart-table tbody, .cart-table tr, .cart-table th, .cart-table td { display: block; }
+  .cart-table thead { display: none; }
+  .cart-table tr { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .cart-table td { border: 0; padding: 6px 16px; }
+
+  /* Footer */
+  .footer-inner { grid-template-columns: 1fr 1fr; padding: 32px 0 20px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; text-align: center; gap: 6px; }
+
+  /* UX page */
+  .ux-grid { grid-template-columns: 1fr; }
+  .ux-span-2 { grid-column: auto; }
+  .ux-hero { grid-template-columns: 1fr; padding: 20px; }
+  .ux-flow-preview { justify-content: flex-start; }
+
+  /* Section headings */
+  .section-heading { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .section-heading button { width: 100%; justify-content: center; }
+}
+
+/* Small mobile: ≤ 480px */
+@media (max-width: 480px) {
+  .app-body, .navbar { width: calc(100% - 16px); }
+
+  .product-grid { grid-template-columns: 1fr; }
+  .shelf-row { grid-template-columns: repeat(2,1fr); }
+
+  .sidebar { grid-template-columns: 1fr; }
+  .stat-strip { grid-template-columns: repeat(2,1fr); }
+
+  .catalog-hero { padding: 16px; border-radius: 20px; }
+  .catalog-hero h1 { font-size: clamp(1.8rem,9vw,2.8rem); }
+
+  .book-detail-page { gap: 18px; }
+  .book-detail-actions { gap: 8px; }
+
+  .login-form-panel { padding: 20px 14px; }
+  .login-card { gap: 14px; }
+  .login-toggle button { padding: 10px 8px; font-size: 0.82rem; }
+
+  .premium-plans-grid { grid-template-columns: 1fr; }
+  .premium-benefits-grid { grid-template-columns: 1fr; }
+
+  .profile-section { padding: 18px; }
+  .profile-stat { padding: 14px 10px; }
+
+  .cart-summary-panel { padding: 18px; }
+  .undo-banner { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  .footer-inner { grid-template-columns: 1fr; }
+}
+
+/* Landscape phones */
+@media (max-width: 768px) and (orientation: landscape) {
+  .catalog-hero { min-height: auto; }
+  .hero-visual { min-height: 180px; }
+  .login-brand { display: none; }
+}
