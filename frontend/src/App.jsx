@@ -7,6 +7,8 @@ import CartPage from "./pages/CartPage";
 import OrdersPage from "./pages/OrdersPage";
 import DeliveryPage from "./pages/DeliveryPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
+import ProfilePage from "./pages/ProfilePage";
+import PremiumPage from "./pages/PremiumPage";
 import UXPage from "./pages/UXPage";
 
 function AppInner() {
@@ -25,12 +27,14 @@ function AppInner() {
     <div className="app-shell">
       <Navbar page={page} setPage={setPage} />
       <div className="app-body">
-        {page === "Catalog" && <CatalogPage setPage={setPage} />}
-        {page === "Cart" && <CartPage setPage={setPage} />}
-        {page === "Orders" && <OrdersPage setPage={setPage} />}
-        {page === "Delivery" && <DeliveryPage />}
+        {page === "Catalog"         && <CatalogPage setPage={setPage} />}
+        {page === "Cart"            && <CartPage setPage={setPage} />}
+        {page === "Orders"          && <OrdersPage setPage={setPage} />}
+        {page === "Delivery"        && <DeliveryPage />}
         {page === "Recommendations" && <RecommendationsPage />}
-        {page === "UX" && <UXPage />}
+        {page === "Profile"         && <ProfilePage setPage={setPage} />}
+        {page === "Premium"         && <PremiumPage setPage={setPage} />}
+        {page === "UX"              && <UXPage />}
       </div>
     </div>
   );
