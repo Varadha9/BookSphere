@@ -19,7 +19,7 @@ export default function ProfilePage({ setPage }) {
 
   async function saveName() {
     setSaving(true);
-    await supabase.auth.updateUser({ data: { name } });
+    await supabase.auth.updateUser({ data: { name, isPremium: user?.isPremium || false } });
     dispatch({ type: "SET_USER", payload: { ...user, name } });
     setSaving(false);
     setSaved(true);

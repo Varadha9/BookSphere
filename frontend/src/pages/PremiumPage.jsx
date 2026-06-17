@@ -49,13 +49,21 @@ export default function PremiumPage({ setPage }) {
   const { state, dispatch } = useStore();
   const isPremium = state.user?.isPremium;
 
+  const [upgrading, setUpgrading] = useState(false);
+  const [error, setError] = useState("");
+
   async function upgrade() {
-    const { error } = await supabase.auth.updateUser({
-      data: { ...state.user, isPremium: true },
+    setUpgrading(true);
+    setError("");
+    const { data, error } = await supabase.auth.updateUser({
+      data: { name: state.user?.name, isPremium: true },
     });
-    if (!error) {
+    if (error) {
+      setError(error.message);
+    } else {
       dispatch({ type: "SET_USER", payload: { ...state.user, isPremium: true } });
     }
+    setUpgrading(false);
   }
 
   if (isPremium) {
@@ -137,11 +145,12 @@ export default function PremiumPage({ setPage }) {
               </ul>
               <button
                 className={plan.disabled ? "btn-plan-disabled" : "btn-primary"}
-                disabled={plan.disabled}
+                disabled={plan.disabled || upgrading}
                 onClick={plan.disabled ? undefined : upgrade}
               >
-                {plan.cta}
+                {upgrading ? <span className="auth-spinner" /> : plan.cta}
               </button>
+              {error && <p style={{ color: "var(--red)", fontSize: "0.8rem" }}>{error}</p>}
             </div>
           ))}
         </div>
