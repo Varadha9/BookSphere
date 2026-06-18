@@ -320,19 +320,13 @@ export function StoreProvider({ children }) {
     setTimeout(() => { cartLoaded.current = true; }, 1000);
   }, [userId, state.catalog]);
 
-  // Fix 1: Persist orders + sync status updates
+  // Fix 1: Persist only status updates (not full orders — new orders saved directly in dispatch)
   useEffect(() => {
     if (!userId || !state.orders.length) return;
     state.orders.forEach(order => {
-      supabase.from("orders").upsert({
-        order_id:   order.orderId,
-        user_id:    userId,
-        items:      order.items,
-        total:      order.total,
-        priority:   order.priority,
-        status:     order.status,
-        is_premium: order.isPremium,
-      }, { onConflict: "order_id" });
+      supabase.from("orders")
+        .update({ status: order.status })
+        .eq("order_id", order.orderId);
     });
   }, [state.orders, userId]);
 

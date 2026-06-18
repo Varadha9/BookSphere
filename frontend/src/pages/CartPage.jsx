@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useStore, knapsackDiscount } from "../store/useStore";
+import { supabase } from "../lib/supabase";
 
 const BOOK_IMAGES = {
   p1:"https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=160&q=80",
@@ -68,6 +69,19 @@ export default function CartPage({ setPage }) {
     }
     setPaying(true);
     await new Promise(r => setTimeout(r, 1800));
+    const orderId = `ORD-${Date.now()}`;
+    const rawTotal = state.cart.reduce((s, i) => s + i.product.price * i.qty, 0);
+    const finalTotal = Math.max(0, rawTotal - discount);
+    const priority = state.user?.isPremium ? 1 : 10;
+    await supabase.from("orders").insert({
+      order_id:   orderId,
+      user_id:    state.user?.userId,
+      items:      state.cart,
+      total:      finalTotal,
+      priority,
+      status:     "PENDING",
+      is_premium: state.user?.isPremium || false,
+    });
     dispatch({ type: "PLACE_ORDER", payload: { discount } });
     dispatch({ type: "SHOW_TOAST", payload: { message: `Payment successful! Order placed 🎉`, type: "success" } });
     setDiscountResult(null);
