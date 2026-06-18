@@ -1,20 +1,53 @@
+import { useEffect, useRef } from "react";
 import { useStore } from "../store/useStore";
 
 export default function OrdersPage({ setPage }) {
   const { state, dispatch } = useStore();
+  const timerRef = useRef({});
+
+  // Auto-deliver orders that are PROCESSING after 8 seconds
+  useEffect(() => {
+    state.orders.forEach(order => {
+      if (order.status === "PROCESSING" && !timerRef.current[order.orderId]) {
+        timerRef.current[order.orderId] = setTimeout(() => {
+          dispatch({ type: "DELIVER_ORDER", payload: order.orderId });
+          dispatch({ type: "SHOW_TOAST", payload: { message: `Order ${order.orderId} has been delivered! 🎉`, type: "success" } });
+          delete timerRef.current[order.orderId];
+        }, 8000);
+      }
+    });
+
+    return () => {
+      Object.values(timerRef.current).forEach(clearTimeout);
+    };
+  }, [state.orders]);
+
+  function processNext() {
+    dispatch({ type: "PROCESS_ORDER" });
+  }
+
+  const statusLabel = { PENDING: "Pending", PROCESSING: "Out for delivery", DELIVERED: "Delivered" };
+  const statusIcon  = { PENDING: "🕐", PROCESSING: "🚚", DELIVERED: "✅" };
 
   return (
     <div className="page">
-      {/* DSA: LinkedList<Order> (FIFO Queue)  →  java.util.LinkedList
-           + PriorityQueue<Order> (Min-Heap)  →  java.util.PriorityQueue
-           Premium priority=1 always dequeues before standard priority=10 */}
-      <h2>📦 Order Queue</h2>
+      <div className="section-heading">
+        <div>
+          <span className="eyebrow">Your purchases</span>
+          <h2>📦 My Orders</h2>
+        </div>
+      </div>
 
       <div className="queue-info">
-        <p>Premium orders (⭐ priority=1) are always processed before regular orders (priority=10).</p>
+        {state.user?.isPremium && (
+          <span className="badge-premium" style={{ fontSize: "0.82rem" }}>⭐ Your orders are processed with priority</span>
+        )}
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button className="btn-primary" disabled={!state.orders.some(o => o.status === "PENDING")}
-            onClick={() => dispatch({ type: "PROCESS_ORDER" })}>
+          <button
+            className="btn-primary"
+            disabled={!state.orders.some(o => o.status === "PENDING")}
+            onClick={processNext}
+          >
             ▶ Process Next Order
           </button>
           <button className="btn-sm" onClick={() => setPage("Delivery")}>
@@ -31,26 +64,21 @@ export default function OrdersPage({ setPage }) {
             <div key={order.orderId} className={`order-card ${order.isPremium ? "premium" : ""}`}>
               <div className="order-header">
                 <span>#{i + 1} {order.orderId}</span>
-                <span className={`status ${order.status.toLowerCase()}`}>{order.status}</span>
-                {order.isPremium && <span className="premium-badge">⭐ PREMIUM</span>}
+                <span className={`status ${order.status.toLowerCase()}`}>
+                  {statusIcon[order.status]} {statusLabel[order.status]}
+                </span>
+                {order.isPremium && <span className="premium-badge">⭐ Priority</span>}
               </div>
-              <p>Priority: {order.priority} · Total: ₹{order.total.toLocaleString()}</p>
+              <p>Total: ₹{order.total.toLocaleString()}</p>
               <div className="order-items">
                 {order.items.map(({ product, qty }) => (
                   <span key={product.id} className="order-item-chip">{product.name} ×{qty}</span>
                 ))}
               </div>
               {order.status === "PROCESSING" && (
-                <button
-                  className="btn-primary btn-sm"
-                  style={{ justifySelf: "start" }}
-                  onClick={() => {
-                    dispatch({ type: "DELIVER_ORDER", payload: order.orderId });
-                    dispatch({ type: "SHOW_TOAST", payload: { message: `Order ${order.orderId} delivered!`, type: "success" } });
-                  }}
-                >
-                  ✅ Mark as Delivered
-                </button>
+                <p style={{ fontSize: "0.78rem", color: "var(--mint)" }}>
+                  🚚 Your order is on the way — delivery confirmation incoming shortly…
+                </p>
               )}
             </div>
           ))}

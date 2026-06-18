@@ -5,7 +5,7 @@ export default function Footer({ setPage }) {
         <div className="footer-brand">
           <div className="footer-logo">B</div>
           <strong>BookSphere</strong>
-          <p>Every bookstore feature backed by the right data structure.</p>
+          <p>Your smart online bookstore. Curated reads, fast delivery, priority orders.</p>
           <div className="footer-social">
             <a href="https://github.com/Varadha9/ShopSphere" target="_blank" rel="noopener noreferrer" className="footer-social-btn">GitHub</a>
           </div>
@@ -38,27 +38,28 @@ export default function Footer({ setPage }) {
           <ul>
             <li><span onClick={() => setPage("Recommendations")}>Book Recommendations</span></li>
             <li><span onClick={() => setPage("Delivery")}>Delivery Tracker</span></li>
-            <li><span onClick={() => setPage("UX")}>UX Blueprint</span></li>
+            <li><span onClick={() => setPage("Feedback")}>Give Feedback</span></li>
           </ul>
         </div>
 
         <div className="footer-col">
-          <h5>DSA Engine</h5>
+          <h5>Help &amp; Legal</h5>
           <ul>
-            <li>HashMap · O(1) search</li>
-            <li>HashSet · Wishlist</li>
-            <li>Stack · Undo remove</li>
-            <li>Priority Queue · Orders</li>
-            <li>Dijkstra · Delivery</li>
-            <li>BFS · Recommendations</li>
-            <li>DP Knapsack · Coupons</li>
+            <li><span onClick={() => setPage("Feedback")}>💬 Feedback</span></li>
+            <li><span onClick={() => setPage("Terms")}>📋 Terms of Service</span></li>
+            <li><span onClick={() => setPage("Terms")}>🔐 Privacy Policy</span></li>
+            <li><a href="mailto:support@booksphere.in" style={{ color: "inherit", textDecoration: "none" }}>✉️ Contact Us</a></li>
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} BookSphere. Built as a DSA showcase project.</span>
-        <span>React + Vite + Supabase · Deployed on Vercel</span>
+        <span>© {new Date().getFullYear()} BookSphere. All rights reserved.</span>
+        <span style={{ display: "flex", gap: 16 }}>
+          <span className="footer-legal-link" onClick={() => setPage("Terms")}>Terms</span>
+          <span className="footer-legal-link" onClick={() => setPage("Terms")}>Privacy</span>
+          <span>React + Vite + Supabase</span>
+        </span>
       </div>
     </footer>
   );

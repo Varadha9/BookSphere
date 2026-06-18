@@ -13,6 +13,8 @@ import DeliveryPage from "./pages/DeliveryPage";
 import RecommendationsPage from "./pages/RecommendationsPage";
 import ProfilePage from "./pages/ProfilePage";
 import PremiumPage from "./pages/PremiumPage";
+import FeedbackPage from "./pages/FeedbackPage";
+import TermsPage from "./pages/TermsPage";
 import UXPage from "./pages/UXPage";
 
 function AppInner() {
@@ -41,6 +43,8 @@ function AppInner() {
         {page === "Recommendations" && <RecommendationsPage setPage={setPage} />}
         {page === "Profile"         && <ProfilePage setPage={setPage} />}
         {page === "Premium"         && <PremiumPage setPage={setPage} />}
+        {page === "Feedback"        && <FeedbackPage setPage={setPage} />}
+        {page === "Terms"           && <TermsPage />}
         {page === "UX"              && <UXPage />}
       </div>
       <Footer setPage={setPage} />

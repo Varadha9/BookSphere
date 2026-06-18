@@ -120,7 +120,7 @@ export default function CartPage({ setPage }) {
                 ))}
               </div>
               <button className="btn-sm" style={{ marginTop: 12 }} onClick={applyDiscount}>
-                💸 Apply Best Discount (DP Knapsack)
+                💸 Apply Best Discount
               </button>
               {discountResult && (
                 <div className="discount-result" style={{ marginTop: 12 }}>

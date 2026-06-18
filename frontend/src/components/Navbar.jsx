@@ -2,11 +2,10 @@ import { useStore } from "../store/useStore";
 import { supabase } from "../lib/supabase";
 
 const pages = [
-  { name: "Catalog",         icon: "📚" },
-  { name: "Cart",            icon: "🛒" },
-  { name: "Orders",          icon: "📦" },
-  { name: "Delivery",        icon: "🚚" },
-  { name: "Recommendations", icon: "🤝" },
+  { name: "Catalog", icon: "📚" },
+  { name: "Cart",    icon: "🛒" },
+  { name: "Orders",  icon: "📦" },
+  { name: "Delivery", icon: "🚚" },
 ];
 
 export default function Navbar({ page, setPage }) {

@@ -101,7 +101,7 @@ export default function CatalogPage({ setPage }) {
         <div><strong>{state.catalog.length}</strong><span>Curated titles</span></div>
         <div><strong>{state.wishlist.size}</strong><span>Saved books</span></div>
         <div><strong>{displayProducts.length}</strong><span>Results</span></div>
-        <div><strong>O(1)</strong><span>Tag search</span></div>
+        <div><strong>Free</strong><span>Delivery</span></div>
       </section>
 
       {/* ── Trending ─────────────────────────────────────── */}

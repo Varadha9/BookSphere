@@ -31,22 +31,22 @@ function validate(mode, form) {
 
 const FEATURES = [
   { icon: "📚", label: "12 curated books" },
-  { icon: "🔍", label: "O(1) tag search" },
+  { icon: "🔍", label: "Instant tag search" },
   { icon: "🛒", label: "Smart cart + undo" },
   { icon: "⭐", label: "Priority orders" },
-  { icon: "🚚", label: "Dijkstra delivery" },
-  { icon: "🤝", label: "BFS recommendations" },
+  { icon: "🚚", label: "Delivery tracking" },
+  { icon: "🤝", label: "Personalised picks" },
 ];
 
 export default function LoginPage() {
   const { state, dispatch } = useStore();
   const [mode, setMode]         = useState("login");
-  const [form, setForm]         = useState({ name: "", email: "", password: "", isPremium: false });
+  const [form, setForm]         = useState({ name: "", email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [errs, setErrs]         = useState({});
   const [touched, setTouched]   = useState({});
-  const [status, setStatus]     = useState(null); // { type: "success"|"error", msg }
+  const [status, setStatus]     = useState(null);
   const [forgotSent, setForgotSent] = useState(false);
   const firstRef = useRef(null);
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
-        options: { data: { name: form.name, isPremium: form.isPremium } },
+        options: { data: { name: form.name, isPremium: false } },
       });
       if (error) {
         setStatus({ type: "error", msg: error.message });
@@ -130,8 +130,8 @@ export default function LoginPage() {
             <div className="logo-mark">B</div>
             <span className="login-brand-name">BookSphere</span>
           </div>
-          <h2 className="login-brand-headline">Your smart bookstore, powered by data structures.</h2>
-          <p className="login-brand-sub">Search in O(1). Wishlist with HashSet. Orders via Priority Queue. Delivery through Dijkstra.</p>
+          <h2 className="login-brand-headline">Your smart bookstore experience.</h2>
+          <p className="login-brand-sub">Search instantly. Save your wishlist. Get priority shipping. Discover books you'll love.</p>
 
           <div className="login-features">
             {FEATURES.map(f => (
@@ -153,7 +153,6 @@ export default function LoginPage() {
       {/* Right panel — form */}
       <div className="login-form-panel">
         <div className="login-card">
-          {/* Mode toggle */}
           <div className="login-toggle">
             <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>Sign In</button>
             <button className={mode === "register" ? "active" : ""} onClick={() => setMode("register")}>Sign Up</button>
@@ -165,7 +164,6 @@ export default function LoginPage() {
             <p>{mode === "login" ? "Sign in to continue your reading journey" : "Create your account — it's free"}</p>
           </div>
 
-          {/* Google */}
           <button className="btn-google" onClick={loginWithGoogle}>
             <svg width="18" height="18" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/>
@@ -241,13 +239,6 @@ export default function LoginPage() {
                 </div>
               )}
             </div>
-
-            {mode === "register" && (
-              <label className="lf-premium-check">
-                <input type="checkbox" checked={form.isPremium} onChange={e => setForm({ ...form, isPremium: e.target.checked })} />
-                <span>⭐ Start as Premium — priority order queue</span>
-              </label>
-            )}
 
             {forgotSent && <div className="lf-status lf-success">✓ Reset link sent to {form.email}</div>}
             {status && <div className={`lf-status ${status.type === "error" ? "lf-error-msg" : "lf-success"}`}>

@@ -2,11 +2,6 @@ import { createContext, useContext, useReducer, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import { DELIVERY_GRAPH, RECOMMENDATION_GRAPH } from "../data/mockData";
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: HashMap  →  java.util.HashMap<String, List<Book>>          ║
-// ║  Tags are keys, List<Book> is the value.                         ║
-// ║  Search by keyword runs in O(1) average time.                    ║
-// ╚══════════════════════════════════════════════════════════════════╝
 function buildSearchIndex(products) {
   const map = {};
   for (const p of products) {
@@ -18,20 +13,10 @@ function buildSearchIndex(products) {
   return map;
 }
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: TreeMap  →  java.util.TreeMap<Double, List<Book>>          ║
-// ║  Red-Black Tree under the hood. Keys (prices) stay sorted.       ║
-// ║  Range queries (min–max price filter) run in O(log n).           ║
-// ╚══════════════════════════════════════════════════════════════════╝
 function buildPriceMap(products) {
   return [...products].sort((a, b) => a.price - b.price);
 }
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: Graph + Dijkstra  →  Map<String, List<Edge>>               ║
-// ║  Weighted adjacency list. PriorityQueue (min-heap) drives the    ║
-// ║  relaxation loop. Shortest path in O((V+E) log V).               ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export function dijkstra(src, dest) {
   const dist = {};
   const prev = {};
@@ -60,11 +45,6 @@ export function dijkstra(src, dest) {
   return { path, distance: dist[dest] };
 }
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: Graph + BFS  →  Map<Book, Set<Book>>                       ║
-// ║  Co-purchase graph. BFS explores neighbours level by level.      ║
-// ║  Visited set (HashSet) prevents revisits. O(V+E).                ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export function bfsRecommend(productId, catalog, depth = 2) {
   const visited = new Set([productId]);
   let frontier = [productId];
@@ -81,11 +61,6 @@ export function bfsRecommend(productId, catalog, depth = 2) {
   return [...visited].map(id => catalog.find(p => p.id === id)).filter(Boolean);
 }
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: 0/1 Knapsack DP  →  int[n+1][W+1]                         ║
-// ║  dp[i][w] = max discount using first i coupons with budget w.    ║
-// ║  Guarantees the best coupon combination. O(n × W).               ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export function knapsackDiscount(coupons, capacity) {
   const cap = Math.floor(capacity);
   const n = coupons.length;
@@ -109,21 +84,8 @@ export function knapsackDiscount(coupons, capacity) {
   return { total: dp[n][cap], selected };
 }
 
-// ── Initial state ─────────────────────────────────────────────────────────────
 const MAX_RECENT = 5;
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  JAVA DSA — Full State Map                                       ║
-// ║  users        →  HashMap<String, User>       (email → user)      ║
-// ║  catalog      →  ArrayList<Book>             (full book list)    ║
-// ║  searchIndex  →  HashMap<String, List<Book>> (tag → books)       ║
-// ║  priceSorted  →  TreeMap<Double, List<Book>> (sorted by price)   ║
-// ║  cart         →  ArrayList<CartItem>         (mutable cart)      ║
-// ║  undoStack    →  ArrayDeque<CartItem>        (Stack — LIFO)      ║
-// ║  wishlist     →  HashSet<String>             (unique book IDs)   ║
-// ║  recentProducts → LinkedList<Book>           (sliding window)    ║
-// ║  orders       →  PriorityQueue<Order>        (min-heap)          ║
-// ╚══════════════════════════════════════════════════════════════════╝
 const initial = {
   user: null,
   catalog: [],
@@ -179,8 +141,6 @@ function reducer(state, action) {
       return { ...initial, loading: false };
 
     case "VIEW_PRODUCT": {
-      // DSA: LinkedList<Book>  →  java.util.LinkedList
-      // Sliding window: add to front, evict tail when size > MAX_RECENT. O(1).
       const product = action.payload;
       const filtered = state.recentProducts.filter(p => p.id !== product.id);
       const recent = [product, ...filtered].slice(0, MAX_RECENT);
@@ -188,8 +148,6 @@ function reducer(state, action) {
     }
 
     case "SEARCH": {
-      // DSA: HashMap<String, List<Book>>  →  java.util.HashMap
-      // Primary: O(1) exact tag lookup. Fallback: scan name/author for partial match.
       const kw = action.payload.toLowerCase();
       const exact = state.searchIndex[kw] || [];
       const seen = new Set(exact.map(p => p.id));
@@ -231,13 +189,13 @@ function reducer(state, action) {
       return {
         ...state,
         cart: state.cart.filter(i => i.product.id !== action.payload),
-        undoStack: [item, ...state.undoStack], // DSA: ArrayDeque.push() — Stack LIFO, O(1)
+        undoStack: [item, ...state.undoStack],
       };
     }
 
     case "UNDO_REMOVE": {
       if (!state.undoStack.length) return state;
-      const [top, ...rest] = state.undoStack; // DSA: ArrayDeque.pop() — Stack LIFO, O(1)
+      const [top, ...rest] = state.undoStack;
       const existing = state.cart.find(i => i.product.id === top.product.id);
       const cart = existing
         ? state.cart.map(i => i.product.id === top.product.id ? { ...i, qty: i.qty + top.qty } : i)
@@ -265,8 +223,6 @@ function reducer(state, action) {
         status: "PENDING",
         isPremium: state.user?.isPremium,
       };
-      // DSA: PriorityQueue<Order>  →  java.util.PriorityQueue (min-heap)
-      // premium priority=1 always surfaces before standard priority=10. O(log n) insert.
       const orders = [...state.orders, order].sort((a, b) => a.priority - b.priority);
       return { ...state, orders, cart: [], undoStack: [] };
     }

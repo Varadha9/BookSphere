@@ -1,8 +1,3 @@
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: Graph (Adjacency List)  →  Map<String, List<Edge>>         ║
-// ║  Each city maps to a list of {to, dist} edges.                   ║
-// ║  Fed into Dijkstra's algorithm in useStore.jsx.                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export const DELIVERY_GRAPH = {
   Mumbai:     [{ to: "Pune", dist: 148 }, { to: "Nashik", dist: 166 }],
   Pune:       [{ to: "Mumbai", dist: 148 }, { to: "Nashik", dist: 213 }, { to: "Hyderabad", dist: 560 }],
@@ -13,11 +8,6 @@ export const DELIVERY_GRAPH = {
   Chennai:    [{ to: "Bangalore", dist: 346 }],
 };
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: Graph (Adjacency List)  →  Map<Book, Set<Book>>            ║
-// ║  Co-purchase edges. BFS in useStore.jsx walks this graph.        ║
-// ║  Visited set prevents cycles. O(V+E) traversal.                  ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export const BOOK_DESCRIPTIONS = {
   p1:  "A collection of tips and tricks for software developers, covering everything from code craftsmanship to career building. Essential reading for anyone serious about programming.",
   p2:  "A handbook of agile software craftsmanship. Martin shows what good, clean code looks like — how to write it, how to read it, and how to transform bad code into clean code.",
@@ -80,11 +70,6 @@ export const RECOMMENDATION_GRAPH = {
   p12: ["p1", "p2", "p7"],
 };
 
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  DSA: Custom N-ary Tree  →  TreeNode { name, children[] }        ║
-// ║  DFS traversal renders genre sidebar and powers category filter.  ║
-// ║  Each level = one genre hierarchy depth. O(n) DFS.               ║
-// ╚══════════════════════════════════════════════════════════════════╝
 export const CATEGORY_TREE = {
   name: "All",
   children: [
