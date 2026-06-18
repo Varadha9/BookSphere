@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
+import { createContext, useContext, useReducer, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { DELIVERY_GRAPH, RECOMMENDATION_GRAPH } from "../data/mockData";
 
@@ -273,6 +273,7 @@ async function loadUserData(userId, catalog, dispatch) {
 export function StoreProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initial);
   const userId = state.user?.userId;
+  const cartLoaded = useRef(false);
 
   // Load books + coupons from Supabase on mount
   useEffect(() => {
@@ -314,7 +315,9 @@ export function StoreProvider({ children }) {
   // Load user data once both user and catalog are ready
   useEffect(() => {
     if (!userId || !state.catalog.length) return;
+    cartLoaded.current = false;
     loadUserData(userId, state.catalog, dispatch);
+    setTimeout(() => { cartLoaded.current = true; }, 1000);
   }, [userId, state.catalog]);
 
   // Fix 1: Persist orders + sync status updates
@@ -345,7 +348,7 @@ export function StoreProvider({ children }) {
 
   // Fix 3: Persist cart to Supabase
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !cartLoaded.current) return;
     supabase.from("carts").delete().eq("user_id", userId).then(() => {
       if (!state.cart.length) return;
       supabase.from("carts").insert(state.cart.map(({ product, qty }) => ({ user_id: userId, book_id: product.id, qty })));
