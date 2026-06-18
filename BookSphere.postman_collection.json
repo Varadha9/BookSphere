@@ -1,0 +1,285 @@
+{
+  "info": {
+    "name": "BookSphere — Supabase API",
+    "description": "REST API collection for BookSphere. Replace {{supabase_url}} and {{anon_key}} in Variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "supabase_url", "value": "https://vckpdkzsfeeibldxippd.supabase.co" },
+    { "key": "anon_key",     "value": "your_anon_key_here" },
+    { "key": "user_jwt",     "value": "paste_jwt_token_after_login" },
+    { "key": "user_id",      "value": "paste_user_uuid_here" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (Email + Password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",       "value": "{{anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{supabase_url}}/auth/v1/signup",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Email + Password)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",       "value": "{{anon_key}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{supabase_url}}/auth/v1/token?grant_type=password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",         "value": "{{anon_key}}" },
+              { "key": "Authorization",  "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/auth/v1/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books (Public)",
+      "item": [
+        {
+          "name": "GET All Books",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{anon_key}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/books?select=*"
+          }
+        },
+        {
+          "name": "GET Books by Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{anon_key}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/books?select=*&category=eq.Fiction"
+          }
+        },
+        {
+          "name": "GET Books sorted by Price",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{anon_key}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/books?select=*&order=price.asc"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coupons (Public)",
+      "item": [
+        {
+          "name": "GET All Coupons",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{anon_key}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/coupons?select=*"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart (Private)",
+      "item": [
+        {
+          "name": "GET My Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/carts?select=*&user_id=eq.{{user_id}}"
+          }
+        },
+        {
+          "name": "POST Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" },
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Prefer",        "value": "resolution=merge-duplicates" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/carts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"book_id\": \"book-1\",\n  \"qty\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Remove from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/carts?user_id=eq.{{user_id}}&book_id=eq.book-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlist (Private)",
+      "item": [
+        {
+          "name": "GET My Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/wishlists?select=*&user_id=eq.{{user_id}}"
+          }
+        },
+        {
+          "name": "POST Add to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" },
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Prefer",        "value": "resolution=merge-duplicates" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/wishlists",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"book_id\": \"book-1\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Remove from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/wishlists?user_id=eq.{{user_id}}&book_id=eq.book-1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders (Private)",
+      "item": [
+        {
+          "name": "GET My Orders (sorted by priority)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/orders?select=*&user_id=eq.{{user_id}}&order=priority.asc"
+          }
+        },
+        {
+          "name": "POST Place Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" },
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Prefer",        "value": "resolution=merge-duplicates" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/orders",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"ORD-1234567890\",\n  \"user_id\": \"{{user_id}}\",\n  \"items\": [{\"product\": {\"id\": \"book-1\", \"name\": \"Sample Book\", \"price\": 299}, \"qty\": 1}],\n  \"total\": 299,\n  \"priority\": 10,\n  \"status\": \"PENDING\",\n  \"is_premium\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "PATCH Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" },
+              { "key": "Content-Type",  "value": "application/json" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/orders?order_id=eq.ORD-1234567890",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PROCESSING\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recently Viewed (Private)",
+      "item": [
+        {
+          "name": "GET Recently Viewed (last 5)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/recently_viewed?select=*&user_id=eq.{{user_id}}&order=viewed_at.desc&limit=5"
+          }
+        },
+        {
+          "name": "POST/UPSERT Add Recently Viewed",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "apikey",        "value": "{{anon_key}}" },
+              { "key": "Authorization", "value": "Bearer {{user_jwt}}" },
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Prefer",        "value": "resolution=merge-duplicates" }
+            ],
+            "url": "{{supabase_url}}/rest/v1/recently_viewed",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"book_id\": \"book-1\",\n  \"viewed_at\": \"2024-01-01T10:00:00Z\"\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
