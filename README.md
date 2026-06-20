@@ -29,6 +29,7 @@ Real Problem  →  Bookstore Feature  →  Best-fit Data Structure  →  Impleme
 | Security | Row Level Security (RLS) |
 | DSA Engine | JavaScript (mirrored from Java DSA concepts) |
 | Deployment | Vercel (frontend) + Supabase Cloud (backend) |
+| Testing | Java 17 · Selenium 4.18 · TestNG 7.9 · Cucumber 7.15 · Maven |
 
 ---
 
@@ -171,10 +172,12 @@ Get Book Recommendations
 ```
 ShopSphere/
 ├── README.md               ← this file
-├── BACKEND.md              ← backend documentation
-├── SUPABASE.md             ← Supabase setup guide
-├── BOOKSPHERE_DOCS.md      ← full DSA technical docs
 ├── supabase_setup.sql      ← run this in Supabase SQL Editor
+├── docs/
+│   ├── SELENIUM.md         ← Selenium test suite docs
+│   ├── BACKEND.md          ← backend architecture + JWT + OAuth
+│   ├── SUPABASE.md         ← Supabase setup guide + RLS
+│   └── BOOKSPHERE_DOCS.md  ← full DSA technical docs
 ├── frontend/
 │   ├── .env.example
 │   ├── package.json
@@ -200,17 +203,53 @@ ShopSphere/
 │       │   └── mockData.js         ← delivery graph + rec graph + category tree
 │       ├── App.jsx
 │       └── index.css
+└── selenium-tests/
+    ├── pom.xml
+    ├── testng.xml
+    ├── TEST_CASES.md
+    └── src/test/java/com/booksphere/
+        ├── utils/BaseTest.java
+        ├── pages/           ← Page Object Model
+        ├── tests/           ← TestNG + Cucumber step defs
+        └── runner/CucumberRunner.java
 ```
+
+---
+
+## 🧪 Testing
+
+BookSphere has a full hybrid automation suite covering UI, BDD, and REST API layers.
+
+| Layer | Tool | Tests |
+|-------|------|-------|
+| UI (browser) | Selenium 4.18 + TestNG 7.9 | Login, Catalog, Cart |
+| BDD | Cucumber 7.15 | Login scenarios (`.feature` files) |
+| REST API | `HttpURLConnection` + TestNG | Supabase endpoints |
+
+```bash
+cd selenium-tests
+mvn test                      # run all 4 suites
+mvn test -Dgroups=smoke       # smoke only
+mvn test -Dgroups=regression  # regression only
+mvn test -Dgroups=api         # API only
+```
+
+Reports: `selenium-tests/target/surefire-reports/index.html` · `target/cucumber-report.html`
+
+Full testing docs → [`docs/SELENIUM.md`](./docs/SELENIUM.md)
 
 ---
 
 ## 📄 Documentation
 
+All docs live in [`docs/`](./docs/):
+
 | File | Contents |
 |------|---------|
-| [`BACKEND.md`](./BACKEND.md) | Full backend architecture, Supabase services, JWT flow, OAuth |
-| [`SUPABASE.md`](./SUPABASE.md) | Supabase setup guide, table schemas, RLS policies |
-| [`BOOKSPHERE_DOCS.md`](./BOOKSPHERE_DOCS.md) | DSA technical docs, algorithm rationale, data flow |
+| [`docs/SELENIUM.md`](./docs/SELENIUM.md) | Selenium suite: architecture, POM, test modules, DSA coverage, reports |
+| [`docs/BACKEND.md`](./docs/BACKEND.md) | Full backend architecture, Supabase services, JWT flow, OAuth |
+| [`docs/SUPABASE.md`](./docs/SUPABASE.md) | Supabase setup guide, table schemas, RLS policies |
+| [`docs/BOOKSPHERE_DOCS.md`](./docs/BOOKSPHERE_DOCS.md) | DSA technical docs, algorithm rationale, data flow |
 | [`supabase_setup.sql`](./supabase_setup.sql) | Run in Supabase SQL Editor to set up all tables |
 
 ---
